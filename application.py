@@ -33,6 +33,18 @@ class Chart(FigureCanvas):
         formula_sympy=sympy.sympify(formula[2:])
         vectorized_formula=np.vectorize(lambda xi:formula_sympy.subs(sympy.symbols("x"),xi))
         y=vectorized_formula(x)
+        try:
+            y=y.astype(float)
+        except (TypeError):
+            i=0
+            while True:                
+                if "I" in str(y[i]):
+                    y=np.delete(y,i)
+                    x=np.delete(x,i)
+                else:
+                    i+=1
+                if i==len(y):
+                    break
         self.ax.plot(x,y,marker='')
         self.ax.grid(True)
         self.fig.canvas.draw()
